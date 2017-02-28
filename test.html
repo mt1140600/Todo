@@ -39,6 +39,7 @@
   
   	<script type="text/babel">
     	var place = document.querySelector("#test");
+    	var inp = "khbhbkb";
     	var TodoItems = React.createClass({
 	  		render: function() {
 	    		var todoEntries = this.props.entries;
@@ -57,24 +58,27 @@
 	  var TodoList = React.createClass({
 	  getInitialState: function() {
 	    return {
-	      items: []
+	      items: [],
+	      value :''
 	    };
+	  },
+	  store: function(e) {
+	  	this.setState({value : e.target.value});
 	  },
 	  addItem: function(e) {
 	     var arr = this.state.items;
 	   
 	  arr.push(
 	    {
-	      text: this._inputElement.value,
+	      text: this.state.value,
 	      key: Date.now()
 	    }
+
 	  );
 	 
 	  this.setState({
 	    items: arr
 	  });
-	 
-	  this._inputElement.value = "";
 	 
 	  e.preventDefault();
 	  },
@@ -82,10 +86,10 @@
       return (
         <div className="todoListMain">
           <div className="header">
-            <form onSubmit={this.addItem}>
-              <input placeholder="enter task" ref={(a) => this._inputElement = a}>
+            <form>
+              <input placeholder="enter task" value = {this.state.value} onChange ={this.store}>
               </input>
-              <button type="submit">add</button>
+              <button onClick={this.addItem}>add</button>
             </form>
           </div>
           <TodoItems entries={this.state.items}/>
