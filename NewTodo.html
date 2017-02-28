@@ -38,11 +38,10 @@
       </div>
     
       <script type="text/babel">
-        var place = document.querySelector("#test");
-        var inp = "khbhbkb";
-        var TodoItems = React.createClass({
+        let place = document.querySelector("#test");
+        let TodoItems = React.createClass({
           render: function() {
-            var todoEntries = this.props.entries;
+            let todoEntries = this.props.entries;
           
             function createList(item) {
               let list = () => {
@@ -51,7 +50,7 @@
               return list();
             }
 
-            var listItems = todoEntries.map(createList);
+            let listItems = todoEntries.map(createList);
             return (
                 <ol className="theList">
                 {listItems}
@@ -59,7 +58,7 @@
             );
           }
       });
-      var TodoList = React.createClass({
+      let TodoList = React.createClass({
       getInitialState: function() {
         return {
           items: [],
@@ -70,7 +69,7 @@
         this.setState({value : e.target.value});
       },
       addItem: function(e) {
-         var arr = this.state.items;
+         let arr = this.state.items;
        
       arr.push(
         {
