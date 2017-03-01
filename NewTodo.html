@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
   <html>
     <style>
       body {
@@ -32,6 +32,8 @@
     <script src="https://unpkg.com/react-dom@15.3.2/dist/react-dom.js"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script> -->
     <script src="https://npmcdn.com/babel-core@5.8.38/browser.min.js"></script>
+    <script src="localforage.js"></script>
+    <!-- <script>localforage.getItem('something', myCallback);</script> -->
   </head>
   <body>
     
@@ -40,80 +42,128 @@
     
       <script type="text/babel">
         let place = document.querySelector("#test");
-        let state;
-        class TodoItems extends React.Component{
-          render(){
+        let prevState;
+        let arrN = [];
+        class TodoItems extends React.Component {
+            render() {
 
-            function createList(item) {
-                  let list = () => {
-                    return <li key = {item.key}>{item.text}</li>
-                  };
-                  return list();
-              }
+                function createList(item) {
+                    let list = () => {
+                        return <li key = {
+                            item.key
+                        } > {
+                            item.text
+                        } < /li>
+                    };
+                    return list();
+                }
 
-            let todoEntries = this.props.entries;
-              
-              let listItems = todoEntries.map(createList);
-              return (
-                  <ol className="theList">
-                  {listItems}
-                  </ol>
-              );
-          }
+                let todoEntries = this.props.entries;
+                let listItems = todoEntries.map(createList);
+                return ( <
+                    ol className = "theList" > {
+                        listItems
+                    } <
+                    /ol>
+                );
+            }
         }
 
-      class TodoList extends React.Component{
-        constructor(props) {
-        super(props);
-      
-        this.state = {
-          items: [],
-          value: '',
-          }
-          this.store = this.store.bind(this);
-          this.addItem = this.addItem.bind(this);
-        }
-      store(e) {
-        this.setState({value : e.target.value});
-      }
-      addItem(e) {
-         let arr = this.state.items;
-       
-      arr.push(
-        {
-          text: this.state.value,
-          key: Date.now()
-        }
+        class TodoList extends React.Component {
+            constructor(props) {
+                super(props);
 
-      );
-     
-      this.setState({
-        items: arr
-      });
-     this.state.value = "";
-      e.preventDefault();
-      }
-    render() {
-        return (
-          <div className="todoListMain">
-            <div className="header">
-              <form>
-                <input placeholder="enter task" value = {this.state.value} onChange ={this.store}>
-                </input>
-                <button onClick={this.addItem}>add</button>
-              </form>
-            </div>
-            <TodoItems entries={this.state.items}/>
-          </div>
+                localforage.getItem('my array').then(function(value) {
+                    prevState = value;
+                    //console.log(prevState);
+                    console.log(prevState.length);
+                    let i = 0;
+                    for (let iterate of value) {
+                        console.log('ujb');
+                        console.log(iterate);
+                        arrN[i] = {
+                            text: iterate.text,
+                            key: iterate.key
+                        };
+                        console.log(i);
+                        i = i + 1;
+                    }
+                    console.log(arrN);
+                }).catch(function(err) {
+                    console.log(err);
+                });
+                this.state = {
+                    items: arrN,
+                    value: '',
+                }
+                this.store = this.store.bind(this);
+                this.addItem = this.addItem.bind(this);
+            }
+            store(e) {
+                this.setState({
+                    value: e.target.value
+                });
+            }
+            addItem(e) {
+                let arr = this.state.items;
+
+                arr.push({
+                        text: this.state.value,
+                        key: Date.now()
+                    }
+
+                );
+
+                this.setState({
+                    items: arr
+                });
+                localforage.setItem('my array', arr).then(function(value) {
+                    //console.log(value);
+                    //console.log('raghav mittal');
+                }).catch(function(err) {
+                    //console.log(err);
+                });
+                this.state.value = "";
+                e.preventDefault();
+            }
+            render() {
+                return ( <
+                    div className = "todoListMain" >
+                    <
+                    div className = "header" >
+                    <
+                    form >
+                    <
+                    input placeholder = "enter task"
+                    value = {
+                        this.state.value
+                    }
+                    onChange = {
+                        this.store
+                    } >
+                    <
+                    /input> <
+                    button onClick = {
+                        this.addItem
+                    } > add < /button> <
+                    /form> <
+                    /div> <
+                    TodoItems entries = {
+                        this.state.items
+                    }
+                    /> <
+                    /div>
+                );
+            }
+        }
+        ReactDOM.render( <
+            div >
+            <
+            TodoList / >
+            <
+            /div>,
+            place
         );
-      }
-  }
-      ReactDOM.render(
-        <div>
-          <TodoList/>
-        </div>,
-        place
-      );
     </script>
   </body>
     
